@@ -1,0 +1,23 @@
+cabal-version: 2.2
+name:          hs-wasmtime
+version:       0.0.1.0
+build-type:    Simple
+
+library
+  exposed-modules:  Paths_hs_wasmtime
+  extra-libraries:  wasmtime
+  hs-source-dirs:   src
+  ghc-options:      -Wall
+  build-depends:    base
+  default-language: Haskell2010
+
+test-suite hs-wasmtime-test
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          hs-wasmtime-test.hs
+  ghc-options:      -Wall -threaded -rtsopts
+  build-depends:
+    , base
+    , hs-wasmtime
+
+  default-language: Haskell2010
