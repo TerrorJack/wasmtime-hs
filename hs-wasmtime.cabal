@@ -6,6 +6,7 @@ build-type:    Simple
 library
   exposed-modules:  Paths_hs_wasmtime
   extra-libraries:  wasmtime
+  c-sources:        cbits/cbits.c
   hs-source-dirs:   src
   ghc-options:      -Wall
   build-depends:    base
