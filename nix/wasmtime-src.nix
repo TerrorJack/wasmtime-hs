@@ -1,10 +1,9 @@
 { sources ? import ./sources.nix { }
-, haskellNix ? import sources.haskell-nix { }
-, pkgs ? haskellNix.pkgs-unstable
+, pkgs ? import sources.nixpkgs { }
 }: pkgs.fetchFromGitHub {
   owner = "bytecodealliance";
   repo = "wasmtime";
-  rev = "v0.26.0";
-  sha256 = "19s1r2nsb1kak79djwk7ip5fqb4fy3v8wxirl71sdkzx1mc0cn37";
+  rev = "dev";
+  sha256 = "0g36kz0ic5kicp525yfdwi7pmgdhscrr3y8jpy2i1i4p1798nyfz";
   fetchSubmodules = true;
 }

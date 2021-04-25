@@ -12,14 +12,11 @@ self: _: {
       src = fetchFromGitHub {
         owner = "bytecodealliance";
         repo = "wasmtime";
-        rev = "v0.26.0";
-        sha256 = "19s1r2nsb1kak79djwk7ip5fqb4fy3v8wxirl71sdkzx1mc0cn37";
+        rev = "dev";
+        sha256 = "0g36kz0ic5kicp525yfdwi7pmgdhscrr3y8jpy2i1i4p1798nyfz";
         fetchSubmodules = true;
       };
-      cargoSha256 = "1mg7863f33vkwh4v8kncg6xpa1x5lv30g54ax12flzj2mq0kkjzl";
-      cargoPatches = [
-        ./wasmtime-c-api.patch
-      ];
+      cargoSha256 = "1ydn2d8y9rcgq3xq9gwy3mj1krk89lf90g5shqwjwqlc26ys6m1x";
       buildInputs = lib.optionals stdenv.isDarwin [
         libiconv
         darwin.apple_sdk.frameworks.Security

@@ -1,6 +1,6 @@
 { sources ? import ./nix/sources.nix { }
 , haskellNix ? import sources.haskell-nix { }
-, pkgs ? import haskellNix.sources.nixpkgs-unstable (haskellNix.nixpkgsArgs // {
+, pkgs ? import sources.nixpkgs (haskellNix.nixpkgsArgs // {
     overlays = haskellNix.nixpkgsArgs.overlays ++ [
       (import ./nix/wasmtime-c-api.nix)
     ];
@@ -21,6 +21,7 @@
       brittany = "latest";
       cabal = "latest";
       cabal-fmt = "latest";
+      friendly = "latest";
       hindent = "latest";
       hlint = "latest";
       ormolu = "latest";
