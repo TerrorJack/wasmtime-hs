@@ -40,10 +40,10 @@ jobs:
 
       - name: test
         run: |
-          nix-build --keep-going --argstr ghc ${{ matrix.ghc }} . -A hs-wasmtime
+          nix-build --keep-going --argstr ghc ${{ matrix.ghc }} . -A wasmtime-hs
 
       - name: test-nix-shell
         run: |
-          nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "cabal v2-run hs-wasmtime-test"
+          nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "cabal v2-run wasmtime-hs-test"
 
           nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "haskell-language-server typecheck"

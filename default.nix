@@ -8,7 +8,7 @@
 , ghc ? "ghc8104"
 }: pkgs.haskell-nix.cabalProject {
   src = pkgs.haskell-nix.haskellLib.cleanGit {
-    name = "hs-wasmtime";
+    name = "wasmtime-hs";
     src = ./.;
   };
   compiler-nix-name = ghc;

@@ -1,10 +1,10 @@
 cabal-version: 2.2
-name:          hs-wasmtime
+name:          wasmtime-hs
 version:       0.0.1.0
 build-type:    Simple
 
 library
-  exposed-modules:  Paths_hs_wasmtime
+  exposed-modules:  Paths_wasmtime_hs
   extra-libraries:  wasmtime
   c-sources:        cbits/cbits.c
   hs-source-dirs:   src
@@ -12,13 +12,13 @@ library
   build-depends:    base
   default-language: Haskell2010
 
-test-suite hs-wasmtime-test
+test-suite wasmtime-hs-test
   type:             exitcode-stdio-1.0
   hs-source-dirs:   test
-  main-is:          hs-wasmtime-test.hs
+  main-is:          wasmtime-hs-test.hs
   ghc-options:      -Wall -threaded -rtsopts
   build-depends:
     , base
-    , hs-wasmtime
+    , wasmtime-hs
 
   default-language: Haskell2010
