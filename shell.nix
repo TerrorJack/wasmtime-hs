@@ -11,6 +11,7 @@
 }: hsPkgs.shellFor {
   packages = ps: with ps; [
     wasmtime-hs
+    wasmtime-hs-bindgen
   ];
 
   withHoogle = true;
