@@ -9,7 +9,14 @@ executable wasmtime-hs-bindgen
   ghc-options:      -Wall -threaded -rtsopts
   build-depends:
     , base
+    , bytestring
+    , Cabal
+    , containers
     , filepath
     , language-c
+    , pretty
+    , process
+    , template-haskell
+    , uniplate
 
   default-language: Haskell2010
