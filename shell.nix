@@ -44,5 +44,7 @@ hsPkgs.shellFor {
 
   exactDeps = true;
 
+  LD_LIBRARY_PATH = [ "${pkgs.wasmtime}/lib" ];
+
   WASMTIME_SRC = pkgs.wasmtime.src;
 }

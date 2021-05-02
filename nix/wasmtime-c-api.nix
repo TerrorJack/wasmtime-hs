@@ -1,7 +1,7 @@
 self: _: {
   wasmtime = self.callPackage
     ({ darwin, fetchFromGitHub, lib, libiconv, rustPlatform, stdenv }:
-      rustPlatform.buildRustPackage {
+      rustPlatform.buildRustPackage rec {
         pname = "wasmtime-c-api";
         version = "0.19.0";
         src = fetchFromGitHub {
@@ -16,12 +16,16 @@ self: _: {
           libiconv
           darwin.apple_sdk.frameworks.Security
         ];
-        cargoBuildFlags = [ "--package wasmtime-c-api" ];
-        cargoTestFlags = [ "--package wasmtime-c-api" ];
+        cargoBuildFlags = [ "--package" "wasmtime-c-api" "--all-features" ];
+        cargoTestFlags = cargoBuildFlags;
         postInstall = ''
           pushd crates/c-api
-          cp -r include $out
-          cp wasm-c-api/include/* $out/include
+          mkdir $out/include
+          cp \
+            include/wasi.h \
+            include/wasmtime.h \
+            wasm-c-api/include/wasm.h \
+            $out/include
           popd
         '';
       })
