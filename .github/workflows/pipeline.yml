@@ -52,6 +52,47 @@ jobs:
 
           git clean -f
 
-          nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "echo :q | cabal v2-repl"
-
           nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "haskell-language-server typecheck"
+
+  sdist-haddock:
+    name: sdist-haddock
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: setup-nix
+        uses: cachix/install-nix-action@v13
+        with:
+          nix_path: nixpkgs=channel:nixpkgs-unstable
+          extra_nix_config: |
+            substituters = https://cache.nixos.org https://hydra.iohk.io
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
+
+      - name: setup-cachix
+        uses: cachix/cachix-action@v10
+        with:
+          name: asterius
+          extraPullNames: niv
+          signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+      - name: sdist
+        run: |
+          nix-shell --pure --keep-going nix/hs4nix.nix --run "cabal v2-sdist"
+
+      - name: sdist-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: sdist
+          path: dist-newstyle/sdist/*.tar.gz
+
+      - name: haddock
+        run: |
+          nix-shell --pure --keep-going nix/hs4nix.nix --run "cabal v2-update && cabal v2-haddock --enable-documentation --haddock-for-hackage --haddock-hyperlink-source --haddock-quickjump wasmtime-hs"
+
+      - name: haddock-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: haddock
+          path: dist-newstyle/*-docs.tar.gz

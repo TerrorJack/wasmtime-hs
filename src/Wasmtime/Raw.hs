@@ -1140,7 +1140,7 @@ foreign import ccall unsafe "wasm_ref_as_instance_const"
   wasm_ref_as_instance_const ::
     Ptr WasmRef -> IO (Ptr WasmInstance)
 
-foreign import ccall unsafe "wasm_instance_new"
+foreign import ccall safe "wasm_instance_new"
   wasm_instance_new ::
     Ptr WasmStore ->
     Ptr WasmModule ->
@@ -1341,7 +1341,7 @@ foreign import ccall unsafe "wasmtime_linker_define_instance"
     Ptr WasmInstance ->
     IO (Ptr WasmtimeError)
 
-foreign import ccall unsafe "wasmtime_linker_instantiate"
+foreign import ccall safe "wasmtime_linker_instantiate"
   wasmtime_linker_instantiate ::
     Ptr WasmtimeLinker ->
     Ptr WasmModule ->
@@ -1451,7 +1451,7 @@ foreign import ccall unsafe "wasmtime_global_set"
   wasmtime_global_set ::
     Ptr WasmGlobal -> Ptr WasmVal -> IO (Ptr WasmtimeError)
 
-foreign import ccall unsafe "wasmtime_instance_new"
+foreign import ccall safe "wasmtime_instance_new"
   wasmtime_instance_new ::
     Ptr WasmStore ->
     Ptr WasmModule ->
