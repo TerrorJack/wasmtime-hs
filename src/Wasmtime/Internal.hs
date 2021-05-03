@@ -2,7 +2,7 @@ module Wasmtime.Internal where
 
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Unsafe as BS
-import Foreign
+import UnliftIO.Foreign
 import qualified Wasmtime.Raw as Raw
 
 asWasmByteVec :: ByteString -> (Ptr Raw.WasmByteVec -> IO r) -> IO r

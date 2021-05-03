@@ -1,7 +1,7 @@
 module Wasmtime where
 
 import Data.ByteString (ByteString)
-import Foreign
+import UnliftIO.Foreign
 import Wasmtime.Error
 import Wasmtime.Internal
 import qualified Wasmtime.Raw as Raw

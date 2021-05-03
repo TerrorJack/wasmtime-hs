@@ -4,8 +4,7 @@ module Wasmtime.Raw
   )
 where
 
-import Foreign
-import Foreign.C
+import UnliftIO.Foreign
 import Wasmtime.Raw.Types
 
 foreign import ccall unsafe "wasm_byte_vec_new_empty"

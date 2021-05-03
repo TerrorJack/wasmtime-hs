@@ -4,9 +4,9 @@ module Wasmtime.Error
   )
 where
 
-import Control.Exception
 import Data.ByteString (ByteString)
-import Foreign
+import UnliftIO
+import UnliftIO.Foreign
 import Wasmtime.Internal
 import qualified Wasmtime.Raw as Raw
 

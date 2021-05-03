@@ -54,6 +54,101 @@ jobs:
 
           nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "haskell-language-server typecheck"
 
+  windows-cargo-build:
+    name: windows-cargo-build
+    runs-on: windows-latest
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: checkout-wasmtime
+        uses: actions/checkout@v2
+        with:
+          repository: bytecodealliance/wasmtime
+          ref: 7a3791f9e9905387c747476334253732fa3e9199
+          path: wasmtime
+          submodules: recursive
+
+      - name: setup-rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable-gnu
+          default: true
+
+      - name: cargo-cache
+        uses: actions/cache@v2
+        with:
+          key: cargo-cache-${{ github.run_id }}
+          restore-keys: cargo-cache-
+          path: |
+            ~/.cargo
+            wasmtime/target
+
+      - name: build-wasmtime-c-api
+        run: |
+          cd wasmtime
+          cargo build --release --all-features --package wasmtime-c-api
+
+  windows:
+    name: windows-ghc-${{ matrix.ghc }}
+    needs: windows-cargo-build
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ghc:
+          - 9.0.1
+          - 8.10.4
+          - 8.8.4
+          - 8.6.5
+          - 8.4.4
+          - 8.2.2
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: checkout-wasmtime
+        uses: actions/checkout@v2
+        with:
+          repository: bytecodealliance/wasmtime
+          ref: 7a3791f9e9905387c747476334253732fa3e9199
+          path: wasmtime
+          submodules: recursive
+
+      - name: setup-haskell
+        id: setup-haskell
+        uses: haskell/actions/setup@v1
+        with:
+          ghc-version: ${{ matrix.ghc }}
+
+      - name: cargo-cache
+        uses: actions/cache@v2
+        with:
+          key: cargo-cache-${{ github.run_id }}
+          restore-keys: cargo-cache-
+          path: |
+            ~/.cargo
+            wasmtime/target
+
+      - name: install-wasmtime-c-api
+        run: |
+          echo ${{ github.workspace }}/wasmtime/target/release >> $env:GITHUB_PATH
+
+      - name: cabal-cache
+        uses: actions/cache@v2
+        with:
+          key: cabal-cache-${{ matrix.ghc }}-${{ github.run_id }}
+          restore-keys: cabal-cache-${{ matrix.ghc }}-
+          path: |
+            ${{ steps.setup-haskell.outputs.cabal-store }}
+            dist-newstyle
+
+      - name: test
+        run: |
+          C:\msys64\msys2_shell.cmd -mingw64 -defterm -full-path -here -no-start -c "cabal v2-test --extra-include-dirs '${{ github.workspace }}/wasmtime/crates/c-api/include' --extra-include-dirs '${{ github.workspace }}/wasmtime/crates/c-api/wasm-c-api/include' --extra-lib-dirs '${{ github.workspace }}/wasmtime/target/release' --test-show-details always"
+
   sdist-haddock:
     name: sdist-haddock
     runs-on: ubuntu-latest

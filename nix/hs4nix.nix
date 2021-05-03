@@ -6,7 +6,7 @@ with pkgs;
 mkShell {
   nativeBuildInputs = [
     cabal-install
-    (haskellPackages.ghcWithPackages (ps: with ps; [ vector ]))
+    (haskellPackages.ghcWithPackages (ps: with ps; [ unliftio vector ]))
   ];
   buildInputs = [ wasmtime ];
 }

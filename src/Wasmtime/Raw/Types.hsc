@@ -6,8 +6,7 @@
 
 module Wasmtime.Raw.Types where
 
-import Foreign
-import Foreign.C
+import UnliftIO.Foreign
 
 newtype Byte
   = Byte CChar
@@ -26,8 +25,8 @@ newtype WasmByte
   deriving (Storable)
 
 data WasmByteVec = WasmByteVec
-  { wasmByteVecSize :: CSize,
-    wasmByteVecData :: Ptr WasmByte
+  { wasmByteVecSize :: !CSize,
+    wasmByteVecData :: !(Ptr WasmByte)
   }
 
 instance Storable WasmByteVec where
@@ -53,8 +52,8 @@ newtype WasmMutability
 #{enum WasmMutability, WasmMutability, wasmConst = WASM_CONST, wasmVar = WASM_VAR}
 
 data WasmLimits = WasmLimits
-  { wasmLimitsMin :: Word32,
-    wasmLimitsMax :: Word32
+  { wasmLimitsMin :: !Word32,
+    wasmLimitsMax :: !Word32
   }
 
 instance Storable WasmLimits where
@@ -66,8 +65,8 @@ instance Storable WasmLimits where
 data WasmValtype
 
 data WasmValtypeVec = WasmValtypeVec
-  { wasmValtypeVecSize :: CSize,
-    wasmValtypeVecData :: Ptr (Ptr WasmValtype)
+  { wasmValtypeVecSize :: !CSize,
+    wasmValtypeVecData :: !(Ptr (Ptr WasmValtype))
   }
 
 instance Storable WasmValtypeVec where
@@ -85,8 +84,8 @@ newtype WasmValkind
 data WasmFunctype
 
 data WasmFunctypeVec = WasmFunctypeVec
-  { wasmFunctypeVecSize :: CSize,
-    wasmFunctypeVecData :: Ptr (Ptr WasmFunctype)
+  { wasmFunctypeVecSize :: !CSize,
+    wasmFunctypeVecData :: !(Ptr (Ptr WasmFunctype))
   }
 
 instance Storable WasmFunctypeVec where
@@ -98,8 +97,8 @@ instance Storable WasmFunctypeVec where
 data WasmGlobaltype
 
 data WasmGlobaltypeVec = WasmGlobaltypeVec
-  { wasmGlobaltypeVecSize :: CSize,
-    wasmGlobaltypeVecData :: Ptr (Ptr WasmGlobaltype)
+  { wasmGlobaltypeVecSize :: !CSize,
+    wasmGlobaltypeVecData :: !(Ptr (Ptr WasmGlobaltype))
   }
 
 instance Storable WasmGlobaltypeVec where
@@ -111,8 +110,8 @@ instance Storable WasmGlobaltypeVec where
 data WasmTabletype
 
 data WasmTabletypeVec = WasmTabletypeVec
-  { wasmTabletypeVecSize :: CSize,
-    wasmTabletypeVecData :: Ptr (Ptr WasmTabletype)
+  { wasmTabletypeVecSize :: !CSize,
+    wasmTabletypeVecData :: !(Ptr (Ptr WasmTabletype))
   }
 
 instance Storable WasmTabletypeVec where
@@ -124,8 +123,8 @@ instance Storable WasmTabletypeVec where
 data WasmMemorytype
 
 data WasmMemorytypeVec = WasmMemorytypeVec
-  { wasmMemorytypeVecSize :: CSize,
-    wasmMemorytypeVecData :: Ptr (Ptr WasmMemorytype)
+  { wasmMemorytypeVecSize :: !CSize,
+    wasmMemorytypeVecData :: !(Ptr (Ptr WasmMemorytype))
   }
 
 instance Storable WasmMemorytypeVec where
@@ -137,8 +136,8 @@ instance Storable WasmMemorytypeVec where
 data WasmExterntype
 
 data WasmExterntypeVec = WasmExterntypeVec
-  { wasmExterntypeVecSize :: CSize,
-    wasmExterntypeVecData :: Ptr (Ptr WasmExterntype)
+  { wasmExterntypeVecSize :: !CSize,
+    wasmExterntypeVecData :: !(Ptr (Ptr WasmExterntype))
   }
 
 instance Storable WasmExterntypeVec where
@@ -156,8 +155,8 @@ newtype WasmExternkind
 data WasmImporttype
 
 data WasmImporttypeVec = WasmImporttypeVec
-  { wasmImporttypeVecSize :: CSize,
-    wasmImporttypeVecData :: Ptr (Ptr WasmImporttype)
+  { wasmImporttypeVecSize :: !CSize,
+    wasmImporttypeVecData :: !(Ptr (Ptr WasmImporttype))
   }
 
 instance Storable WasmImporttypeVec where
@@ -169,8 +168,8 @@ instance Storable WasmImporttypeVec where
 data WasmExporttype
 
 data WasmExporttypeVec = WasmExporttypeVec
-  { wasmExporttypeVecSize :: CSize,
-    wasmExporttypeVecData :: Ptr (Ptr WasmExporttype)
+  { wasmExporttypeVecSize :: !CSize,
+    wasmExporttypeVecData :: !(Ptr (Ptr WasmExporttype))
   }
 
 instance Storable WasmExporttypeVec where
@@ -180,12 +179,12 @@ instance Storable WasmExporttypeVec where
   poke p WasmExporttypeVec {..} = #{poke wasm_exporttype_vec_t, size} p wasmExporttypeVecSize *> #{poke wasm_exporttype_vec_t, data} p wasmExporttypeVecData
 
 data WasmVal
-  = I32 Int32
-  | I64 Int64
-  | F32 Float32
-  | F64 Float64
-  | Anyref (Ptr WasmRef)
-  | Funcref (Ptr WasmRef)
+  = I32 !Int32
+  | I64 !Int64
+  | F32 !Float32
+  | F64 !Float64
+  | Anyref !(Ptr WasmRef)
+  | Funcref !(Ptr WasmRef)
 
 instance Storable WasmVal where
   sizeOf _ = #{size wasm_val_t}
@@ -207,8 +206,8 @@ instance Storable WasmVal where
   poke p (Funcref v) = #{poke wasm_val_t, kind} p wasmFuncref *> #{poke wasm_val_t, of} p v
 
 data WasmValVec = WasmValVec
-  { wasmValVecSize :: CSize,
-    wasmValVecData :: Ptr WasmVal
+  { wasmValVecSize :: !CSize,
+    wasmValVecData :: !(Ptr WasmVal)
   }
 
 instance Storable WasmValVec where
@@ -222,8 +221,8 @@ data WasmRef
 data WasmFrame
 
 data WasmFrameVec = WasmFrameVec
-  { wasmFrameVecSize :: CSize,
-    wasmFrameVecData :: Ptr (Ptr WasmFrame)
+  { wasmFrameVecSize :: !CSize,
+    wasmFrameVecData :: !(Ptr (Ptr WasmFrame))
   }
 
 instance Storable WasmFrameVec where
@@ -273,8 +272,8 @@ newtype WasmMemoryPages
 data WasmExtern
 
 data WasmExternVec = WasmExternVec
-  { wasmExternVecSize :: CSize,
-    wasmExternVecData :: Ptr (Ptr WasmExtern)
+  { wasmExternVecSize :: !CSize,
+    wasmExternVecData :: !(Ptr (Ptr WasmExtern))
   }
 
 instance Storable WasmExternVec where
@@ -332,8 +331,8 @@ newtype WasmtimeExternrefFinalizer
 data WasmInstancetype
 
 data WasmInstancetypeVec = WasmInstancetypeVec
-  { wasmInstancetypeVecSize :: CSize,
-    wasmInstancetypeVecData :: Ptr (Ptr WasmInstancetype)
+  { wasmInstancetypeVecSize :: !CSize,
+    wasmInstancetypeVecData :: !(Ptr (Ptr WasmInstancetype))
   }
 
 instance Storable WasmInstancetypeVec where
@@ -345,8 +344,8 @@ instance Storable WasmInstancetypeVec where
 data WasmModuletype
 
 data WasmModuletypeVec = WasmModuletypeVec
-  { wasmModuletypeVecSize :: CSize,
-    wasmModuletypeVecData :: Ptr (Ptr WasmModuletype)
+  { wasmModuletypeVecSize :: !CSize,
+    wasmModuletypeVecData :: !(Ptr (Ptr WasmModuletype))
   }
 
 instance Storable WasmModuletypeVec where
