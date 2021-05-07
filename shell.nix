@@ -10,7 +10,7 @@
 , hsPkgs ? import ./default.nix { inherit pkgs ghc; }
 }:
 hsPkgs.shellFor {
-  packages = ps: with ps; [ wasmtime-hs wasmtime-hs-bindgen ];
+  packages = ps: with ps; [ wasmtime-hs ];
 
   withHoogle = true;
 

@@ -42,13 +42,9 @@ jobs:
         run: |
           nix-build --keep-going --no-out-link --argstr ghc ${{ matrix.ghc }} . -A wasmtime-hs
 
-          nix-build --keep-going --no-out-link --argstr ghc ${{ matrix.ghc }} . -A wasmtime-hs-bindgen
-
       - name: test-nix-shell
         run: |
           nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "cabal v2-test --test-show-details always"
-
-          nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "cabal v2-run wasmtime-hs-bindgen"
 
           git clean -f
 
