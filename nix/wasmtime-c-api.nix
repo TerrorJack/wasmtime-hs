@@ -7,15 +7,13 @@ self: _: {
         src = fetchFromGitHub {
           owner = "bytecodealliance";
           repo = "wasmtime";
-          rev = "7a3791f9e9905387c747476334253732fa3e9199";
-          sha256 = "0w0yv8bvlk47ky2grlk4xzhw3yyfvic0qsvshvgjmpv34wbki7jv";
+          rev = "002b0744eb5a66c11751014e0fbcfa94a0289233";
+          sha256 = "0sf2kvcqwbbwnybpn96prvj4ynzrcg9zmg2n521y7k2iv1yndp6k";
           fetchSubmodules = true;
         };
-        cargoHash = "sha256-5yyRujm44a1mK9z0AtxXRGw/MnLlj6/9q/cmtEZCzdI=";
-        buildInputs = lib.optionals stdenv.isDarwin [
-          darwin.libiconv
-          darwin.apple_sdk.frameworks.Security
-        ];
+        cargoHash = "sha256-L+/ZLwnvA8yoWlKVOfvzveBUETyLGG1q5L1owPnG5v4=";
+        buildInputs = lib.optionals stdenv.isDarwin
+          (with darwin; [ libiconv apple_sdk.frameworks.Security ]);
         cargoBuildFlags = [ "--package" "wasmtime-c-api" "--all-features" ];
         cargoTestFlags = cargoBuildFlags;
         postInstall = ''

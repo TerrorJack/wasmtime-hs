@@ -66,7 +66,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: bytecodealliance/wasmtime
-          ref: 7a3791f9e9905387c747476334253732fa3e9199
+          ref: 002b0744eb5a66c11751014e0fbcfa94a0289233
           path: wasmtime
           submodules: recursive
 
@@ -113,7 +113,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: bytecodealliance/wasmtime
-          ref: 7a3791f9e9905387c747476334253732fa3e9199
+          ref: 002b0744eb5a66c11751014e0fbcfa94a0289233
           path: wasmtime
           submodules: recursive
 
@@ -152,6 +152,9 @@ jobs:
   sdist-haddock:
     name: sdist-haddock
     runs-on: ubuntu-latest
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
     steps:
 
       - name: checkout
@@ -191,3 +194,32 @@ jobs:
         with:
           name: haddock
           path: dist-newstyle/*-docs.tar.gz
+
+      - name: setup-node-16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          check-latest: true
+
+      - name: setup-netlify-cli
+        run: |
+          npm config set prefix ~/.local
+
+          npm install -g \
+            netlify-cli
+
+          echo ~/.local/bin >> $GITHUB_PATH
+
+      - name: documentation
+        run: |
+          DOCDIR=$(nix-shell --pure --keep-going nix/hs4nix.nix --run 'dirname $(cabal v2-haddock --enable-documentation --haddock-html-location "https://hackage.haskell.org/package/\$pkg-\$version/docs" --haddock-hyperlink-source --haddock-quickjump wasmtime-hs | tail -n1)')
+
+          if [ ! -z "$NETLIFY_AUTH_TOKEN" ]
+          then
+            if [ $(git rev-parse --abbrev-ref HEAD) = "master" ]
+            then
+              netlify deploy --dir $DOCDIR --message "$GITHUB_REF-$GITHUB_SHA" --prod
+            else
+              netlify deploy --dir $DOCDIR --message "$GITHUB_REF-$GITHUB_SHA"
+            fi
+          fi
