@@ -1,7 +1,9 @@
-module Wasmtime.Internal where
+module Wasmtime.ByteVec where
 
 import Data.ByteString (ByteString)
+import qualified Data.ByteString.Internal as BS
 import qualified Data.ByteString.Unsafe as BS
+import UnliftIO
 import UnliftIO.Foreign
 import qualified Wasmtime.Raw as Raw
 
@@ -16,3 +18,12 @@ fromWasmByteVec bv_p = do
     (castPtr buf_p)
     (fromIntegral buf_len)
     (with bv Raw.wasm_byte_vec_delete)
+
+fromOwnedWasmByteVec :: ForeignPtr a -> Ptr Raw.WasmByteVec -> IO ByteString
+fromOwnedWasmByteVec fp p_bv = do
+  Raw.WasmByteVec buf_len buf_p <- peek p_bv
+  evaluate $
+    BS.fromForeignPtr
+      (castForeignPtr fp)
+      (buf_p `minusPtr` unsafeForeignPtrToPtr fp)
+      (fromIntegral buf_len)

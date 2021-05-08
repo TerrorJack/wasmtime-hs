@@ -306,7 +306,7 @@ newtype WasmtimeProfilingStrategy
   = WasmtimeProfilingStrategy Word8
   deriving (Storable)
 
-#{enum WasmtimeProfilingStrategy, WasmtimeProfilingStrategy, wasmtimeProfilingStrategyNone = WASMTIME_PROFILING_STRATEGY_NONE, wasmtimeProfilingStrategyNoneJitdump = WASMTIME_PROFILING_STRATEGY_JITDUMP, wasmtimeProfilingStrategyVtune = WASMTIME_PROFILING_STRATEGY_VTUNE}
+#{enum WasmtimeProfilingStrategy, WasmtimeProfilingStrategy, wasmtimeProfilingStrategyNone = WASMTIME_PROFILING_STRATEGY_NONE, wasmtimeProfilingStrategyJitdump = WASMTIME_PROFILING_STRATEGY_JITDUMP, wasmtimeProfilingStrategyVtune = WASMTIME_PROFILING_STRATEGY_VTUNE}
 
 data WasmtimeLinker
 

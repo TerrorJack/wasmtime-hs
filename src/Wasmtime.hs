@@ -3,7 +3,7 @@ module Wasmtime where
 import Data.ByteString (ByteString)
 import UnliftIO.Foreign
 import Wasmtime.Error
-import Wasmtime.Internal
+import Wasmtime.ByteVec
 import qualified Wasmtime.Raw as Raw
 
 wat2wasm :: ByteString -> IO ByteString

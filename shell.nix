@@ -45,4 +45,6 @@ hsPkgs.shellFor {
   exactDeps = true;
 
   WASMTIME_SRC = pkgs.wasmtime.src;
+
+  RUST_BACKTRACE = "full";
 }

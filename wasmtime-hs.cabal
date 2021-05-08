@@ -8,6 +8,7 @@ common deps
   build-depends:
     , base
     , bytestring
+    , unliftio
 
   ghc-options:   -Wall
 
@@ -15,17 +16,21 @@ library
   import:           deps
   exposed-modules:
     Wasmtime
+    Wasmtime.ByteVec
+    Wasmtime.Config
+    Wasmtime.Engine
     Wasmtime.Error
+    Wasmtime.Frame
+    Wasmtime.Module
     Wasmtime.Raw
     Wasmtime.Raw.Types
+    Wasmtime.Store
+    Wasmtime.Trap
+    Wasmtime.Vec
 
-  other-modules:    Wasmtime.Internal
   extra-libraries:  wasmtime
   hs-source-dirs:   src
-  build-depends:
-    , unliftio
-    , vector
-
+  build-depends:    vector
   default-language: Haskell2010
 
 test-suite wasmtime-hs-test
