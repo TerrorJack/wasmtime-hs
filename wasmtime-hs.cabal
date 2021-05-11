@@ -26,6 +26,7 @@ library
     Wasmtime.Raw.Types
     Wasmtime.Store
     Wasmtime.Trap
+    Wasmtime.Valtype
     Wasmtime.Vec
 
   extra-libraries:  wasmtime

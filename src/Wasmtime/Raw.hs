@@ -470,18 +470,6 @@ foreign import ccall unsafe "wasm_ref_same"
   wasm_ref_same ::
     Ptr WasmRef -> Ptr WasmRef -> IO CBool
 
-foreign import ccall unsafe "wasm_ref_get_host_info"
-  wasm_ref_get_host_info ::
-    Ptr WasmRef -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_ref_set_host_info"
-  wasm_ref_set_host_info ::
-    Ptr WasmRef -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_ref_set_host_info_with_finalizer"
-  wasm_ref_set_host_info_with_finalizer ::
-    Ptr WasmRef -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
 foreign import ccall unsafe "wasm_frame_delete"
   wasm_frame_delete ::
     Ptr WasmFrame -> IO ()
@@ -510,10 +498,6 @@ foreign import ccall unsafe "wasm_frame_copy"
   wasm_frame_copy ::
     Ptr WasmFrame -> IO (Ptr WasmFrame)
 
-foreign import ccall unsafe "wasm_frame_instance"
-  wasm_frame_instance ::
-    Ptr WasmFrame -> IO (Ptr WasmInstance)
-
 foreign import ccall unsafe "wasm_frame_func_index"
   wasm_frame_func_index ::
     Ptr WasmFrame -> IO Word32
@@ -534,38 +518,6 @@ foreign import ccall unsafe "wasm_trap_copy"
   wasm_trap_copy ::
     Ptr WasmTrap -> IO (Ptr WasmTrap)
 
-foreign import ccall unsafe "wasm_trap_same"
-  wasm_trap_same ::
-    Ptr WasmTrap -> Ptr WasmTrap -> IO CBool
-
-foreign import ccall unsafe "wasm_trap_get_host_info"
-  wasm_trap_get_host_info ::
-    Ptr WasmTrap -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_trap_set_host_info"
-  wasm_trap_set_host_info ::
-    Ptr WasmTrap -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_trap_set_host_info_with_finalizer"
-  wasm_trap_set_host_info_with_finalizer ::
-    Ptr WasmTrap -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_trap_as_ref"
-  wasm_trap_as_ref ::
-    Ptr WasmTrap -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_trap"
-  wasm_ref_as_trap ::
-    Ptr WasmRef -> IO (Ptr WasmTrap)
-
-foreign import ccall unsafe "wasm_trap_as_ref_const"
-  wasm_trap_as_ref_const ::
-    Ptr WasmTrap -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_trap_const"
-  wasm_ref_as_trap_const ::
-    Ptr WasmRef -> IO (Ptr WasmTrap)
-
 foreign import ccall unsafe "wasm_trap_new"
   wasm_trap_new ::
     Ptr WasmStore -> Ptr WasmMessage -> IO (Ptr WasmTrap)
@@ -582,50 +534,6 @@ foreign import ccall unsafe "wasm_trap_trace"
   wasm_trap_trace ::
     Ptr WasmTrap -> Ptr WasmFrameVec -> IO ()
 
-foreign import ccall unsafe "wasm_foreign_delete"
-  wasm_foreign_delete ::
-    Ptr WasmForeign -> IO ()
-
-foreign import ccall unsafe "wasm_foreign_copy"
-  wasm_foreign_copy ::
-    Ptr WasmForeign -> IO (Ptr WasmForeign)
-
-foreign import ccall unsafe "wasm_foreign_same"
-  wasm_foreign_same ::
-    Ptr WasmForeign -> Ptr WasmForeign -> IO CBool
-
-foreign import ccall unsafe "wasm_foreign_get_host_info"
-  wasm_foreign_get_host_info ::
-    Ptr WasmForeign -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_foreign_set_host_info"
-  wasm_foreign_set_host_info ::
-    Ptr WasmForeign -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_foreign_set_host_info_with_finalizer"
-  wasm_foreign_set_host_info_with_finalizer ::
-    Ptr WasmForeign -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_foreign_as_ref"
-  wasm_foreign_as_ref ::
-    Ptr WasmForeign -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_foreign"
-  wasm_ref_as_foreign ::
-    Ptr WasmRef -> IO (Ptr WasmForeign)
-
-foreign import ccall unsafe "wasm_foreign_as_ref_const"
-  wasm_foreign_as_ref_const ::
-    Ptr WasmForeign -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_foreign_const"
-  wasm_ref_as_foreign_const ::
-    Ptr WasmRef -> IO (Ptr WasmForeign)
-
-foreign import ccall unsafe "wasm_foreign_new"
-  wasm_foreign_new ::
-    Ptr WasmStore -> IO (Ptr WasmForeign)
-
 foreign import ccall unsafe "wasm_module_delete"
   wasm_module_delete ::
     Ptr WasmModule -> IO ()
@@ -633,38 +541,6 @@ foreign import ccall unsafe "wasm_module_delete"
 foreign import ccall unsafe "wasm_module_copy"
   wasm_module_copy ::
     Ptr WasmModule -> IO (Ptr WasmModule)
-
-foreign import ccall unsafe "wasm_module_same"
-  wasm_module_same ::
-    Ptr WasmModule -> Ptr WasmModule -> IO CBool
-
-foreign import ccall unsafe "wasm_module_get_host_info"
-  wasm_module_get_host_info ::
-    Ptr WasmModule -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_module_set_host_info"
-  wasm_module_set_host_info ::
-    Ptr WasmModule -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_module_set_host_info_with_finalizer"
-  wasm_module_set_host_info_with_finalizer ::
-    Ptr WasmModule -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_module_as_ref"
-  wasm_module_as_ref ::
-    Ptr WasmModule -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_module"
-  wasm_ref_as_module ::
-    Ptr WasmRef -> IO (Ptr WasmModule)
-
-foreign import ccall unsafe "wasm_module_as_ref_const"
-  wasm_module_as_ref_const ::
-    Ptr WasmModule -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_module_const"
-  wasm_ref_as_module_const ::
-    Ptr WasmRef -> IO (Ptr WasmModule)
 
 foreign import ccall unsafe "wasm_shared_module_delete"
   wasm_shared_module_delete ::
@@ -710,38 +586,6 @@ foreign import ccall unsafe "wasm_func_copy"
   wasm_func_copy ::
     Ptr WasmFunc -> IO (Ptr WasmFunc)
 
-foreign import ccall unsafe "wasm_func_same"
-  wasm_func_same ::
-    Ptr WasmFunc -> Ptr WasmFunc -> IO CBool
-
-foreign import ccall unsafe "wasm_func_get_host_info"
-  wasm_func_get_host_info ::
-    Ptr WasmFunc -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_func_set_host_info"
-  wasm_func_set_host_info ::
-    Ptr WasmFunc -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_func_set_host_info_with_finalizer"
-  wasm_func_set_host_info_with_finalizer ::
-    Ptr WasmFunc -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_func_as_ref"
-  wasm_func_as_ref ::
-    Ptr WasmFunc -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_func"
-  wasm_ref_as_func ::
-    Ptr WasmRef -> IO (Ptr WasmFunc)
-
-foreign import ccall unsafe "wasm_func_as_ref_const"
-  wasm_func_as_ref_const ::
-    Ptr WasmFunc -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_func_const"
-  wasm_ref_as_func_const ::
-    Ptr WasmRef -> IO (Ptr WasmFunc)
-
 foreign import ccall unsafe "wasm_func_new"
   wasm_func_new ::
     Ptr WasmStore ->
@@ -785,38 +629,6 @@ foreign import ccall unsafe "wasm_global_copy"
   wasm_global_copy ::
     Ptr WasmGlobal -> IO (Ptr WasmGlobal)
 
-foreign import ccall unsafe "wasm_global_same"
-  wasm_global_same ::
-    Ptr WasmGlobal -> Ptr WasmGlobal -> IO CBool
-
-foreign import ccall unsafe "wasm_global_get_host_info"
-  wasm_global_get_host_info ::
-    Ptr WasmGlobal -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_global_set_host_info"
-  wasm_global_set_host_info ::
-    Ptr WasmGlobal -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_global_set_host_info_with_finalizer"
-  wasm_global_set_host_info_with_finalizer ::
-    Ptr WasmGlobal -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_global_as_ref"
-  wasm_global_as_ref ::
-    Ptr WasmGlobal -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_global"
-  wasm_ref_as_global ::
-    Ptr WasmRef -> IO (Ptr WasmGlobal)
-
-foreign import ccall unsafe "wasm_global_as_ref_const"
-  wasm_global_as_ref_const ::
-    Ptr WasmGlobal -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_global_const"
-  wasm_ref_as_global_const ::
-    Ptr WasmRef -> IO (Ptr WasmGlobal)
-
 foreign import ccall unsafe "wasm_global_new"
   wasm_global_new ::
     Ptr WasmStore ->
@@ -843,38 +655,6 @@ foreign import ccall unsafe "wasm_table_delete"
 foreign import ccall unsafe "wasm_table_copy"
   wasm_table_copy ::
     Ptr WasmTable -> IO (Ptr WasmTable)
-
-foreign import ccall unsafe "wasm_table_same"
-  wasm_table_same ::
-    Ptr WasmTable -> Ptr WasmTable -> IO CBool
-
-foreign import ccall unsafe "wasm_table_get_host_info"
-  wasm_table_get_host_info ::
-    Ptr WasmTable -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_table_set_host_info"
-  wasm_table_set_host_info ::
-    Ptr WasmTable -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_table_set_host_info_with_finalizer"
-  wasm_table_set_host_info_with_finalizer ::
-    Ptr WasmTable -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_table_as_ref"
-  wasm_table_as_ref ::
-    Ptr WasmTable -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_table"
-  wasm_ref_as_table ::
-    Ptr WasmRef -> IO (Ptr WasmTable)
-
-foreign import ccall unsafe "wasm_table_as_ref_const"
-  wasm_table_as_ref_const ::
-    Ptr WasmTable -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_table_const"
-  wasm_ref_as_table_const ::
-    Ptr WasmRef -> IO (Ptr WasmTable)
 
 foreign import ccall unsafe "wasm_table_new"
   wasm_table_new ::
@@ -911,38 +691,6 @@ foreign import ccall unsafe "wasm_memory_copy"
   wasm_memory_copy ::
     Ptr WasmMemory -> IO (Ptr WasmMemory)
 
-foreign import ccall unsafe "wasm_memory_same"
-  wasm_memory_same ::
-    Ptr WasmMemory -> Ptr WasmMemory -> IO CBool
-
-foreign import ccall unsafe "wasm_memory_get_host_info"
-  wasm_memory_get_host_info ::
-    Ptr WasmMemory -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_memory_set_host_info"
-  wasm_memory_set_host_info ::
-    Ptr WasmMemory -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_memory_set_host_info_with_finalizer"
-  wasm_memory_set_host_info_with_finalizer ::
-    Ptr WasmMemory -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_memory_as_ref"
-  wasm_memory_as_ref ::
-    Ptr WasmMemory -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_memory"
-  wasm_ref_as_memory ::
-    Ptr WasmRef -> IO (Ptr WasmMemory)
-
-foreign import ccall unsafe "wasm_memory_as_ref_const"
-  wasm_memory_as_ref_const ::
-    Ptr WasmMemory -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_memory_const"
-  wasm_ref_as_memory_const ::
-    Ptr WasmRef -> IO (Ptr WasmMemory)
-
 foreign import ccall unsafe "wasm_memory_new"
   wasm_memory_new ::
     Ptr WasmStore -> Ptr WasmMemorytype -> IO (Ptr WasmMemory)
@@ -974,38 +722,6 @@ foreign import ccall unsafe "wasm_extern_delete"
 foreign import ccall unsafe "wasm_extern_copy"
   wasm_extern_copy ::
     Ptr WasmExtern -> IO (Ptr WasmExtern)
-
-foreign import ccall unsafe "wasm_extern_same"
-  wasm_extern_same ::
-    Ptr WasmExtern -> Ptr WasmExtern -> IO CBool
-
-foreign import ccall unsafe "wasm_extern_get_host_info"
-  wasm_extern_get_host_info ::
-    Ptr WasmExtern -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_extern_set_host_info"
-  wasm_extern_set_host_info ::
-    Ptr WasmExtern -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_extern_set_host_info_with_finalizer"
-  wasm_extern_set_host_info_with_finalizer ::
-    Ptr WasmExtern -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_extern_as_ref"
-  wasm_extern_as_ref ::
-    Ptr WasmExtern -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_extern"
-  wasm_ref_as_extern ::
-    Ptr WasmRef -> IO (Ptr WasmExtern)
-
-foreign import ccall unsafe "wasm_extern_as_ref_const"
-  wasm_extern_as_ref_const ::
-    Ptr WasmExtern -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_extern_const"
-  wasm_ref_as_extern_const ::
-    Ptr WasmRef -> IO (Ptr WasmExtern)
 
 foreign import ccall unsafe "wasm_extern_vec_new_empty"
   wasm_extern_vec_new_empty ::
@@ -1106,38 +822,6 @@ foreign import ccall unsafe "wasm_instance_delete"
 foreign import ccall unsafe "wasm_instance_copy"
   wasm_instance_copy ::
     Ptr WasmInstance -> IO (Ptr WasmInstance)
-
-foreign import ccall unsafe "wasm_instance_same"
-  wasm_instance_same ::
-    Ptr WasmInstance -> Ptr WasmInstance -> IO CBool
-
-foreign import ccall unsafe "wasm_instance_get_host_info"
-  wasm_instance_get_host_info ::
-    Ptr WasmInstance -> IO (Ptr ())
-
-foreign import ccall unsafe "wasm_instance_set_host_info"
-  wasm_instance_set_host_info ::
-    Ptr WasmInstance -> Ptr () -> IO ()
-
-foreign import ccall unsafe "wasm_instance_set_host_info_with_finalizer"
-  wasm_instance_set_host_info_with_finalizer ::
-    Ptr WasmInstance -> Ptr () -> FunPtr (Ptr () -> IO ()) -> IO ()
-
-foreign import ccall unsafe "wasm_instance_as_ref"
-  wasm_instance_as_ref ::
-    Ptr WasmInstance -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_instance"
-  wasm_ref_as_instance ::
-    Ptr WasmRef -> IO (Ptr WasmInstance)
-
-foreign import ccall unsafe "wasm_instance_as_ref_const"
-  wasm_instance_as_ref_const ::
-    Ptr WasmInstance -> IO (Ptr WasmRef)
-
-foreign import ccall unsafe "wasm_ref_as_instance_const"
-  wasm_ref_as_instance_const ::
-    Ptr WasmRef -> IO (Ptr WasmInstance)
 
 foreign import ccall safe "wasm_instance_new"
   wasm_instance_new ::

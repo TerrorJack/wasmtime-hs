@@ -29,8 +29,8 @@ hsPkgs.shellFor {
       src = pkgs.fetchFromGitHub {
         owner = "haskell";
         repo = "haskell-language-server";
-        rev = "1.1.0";
-        sha256 = "0kviq3kinm3i0qm4r26rdnlkwbs1s3r1rqiqdry517rgkgnjpcp5";
+        rev = "ghcide-v1.3.0";
+        sha256 = "07b8xjjsd5g4lh9c1klak7gnlss5zwb6dad2cgdxry9jhx7w4z7m";
         fetchSubmodules = true;
       };
       compiler-nix-name = ghc;
@@ -40,6 +40,7 @@ hsPkgs.shellFor {
     (import sources.niv { }).niv
     pkgs.nixfmt
     pkgs.nixpkgs-fmt
+    pkgs.wabt
   ];
 
   exactDeps = true;

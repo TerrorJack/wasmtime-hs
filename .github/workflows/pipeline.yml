@@ -62,7 +62,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: bytecodealliance/wasmtime
-          ref: ec5d8016f7c657dee1c1cc1e2715783e74709461
+          ref: db8ccb54b67016a650732e4a6c38fb4137adfdb9
           path: wasmtime
           submodules: recursive
 
@@ -109,7 +109,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: bytecodealliance/wasmtime
-          ref: ec5d8016f7c657dee1c1cc1e2715783e74709461
+          ref: db8ccb54b67016a650732e4a6c38fb4137adfdb9
           path: wasmtime
           submodules: recursive
 

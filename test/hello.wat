@@ -1,4 +1,6 @@
 (module
-  (func $hello (import "" "hello"))
-  (func (export "run") (call $hello))
-)
+  (type (;0;) (func))
+  (import "" "hello" (func (;0;) (type 0)))
+  (func (;1;) (type 0)
+    call 0)
+  (export "run" (func 1)))

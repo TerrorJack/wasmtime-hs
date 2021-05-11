@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+WASM_PATH=$(mktemp --suffix .wasm)
+
+wat2wasm -o "$WASM_PATH" "$1"
+
+wasm2wat -o "$1" "$WASM_PATH"
+
+rm "$WASM_PATH"
