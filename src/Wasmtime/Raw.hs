@@ -494,10 +494,6 @@ foreign import ccall unsafe "wasm_frame_vec_delete"
   wasm_frame_vec_delete ::
     Ptr WasmFrameVec -> IO ()
 
-foreign import ccall unsafe "wasm_frame_copy"
-  wasm_frame_copy ::
-    Ptr WasmFrame -> IO (Ptr WasmFrame)
-
 foreign import ccall unsafe "wasm_frame_func_index"
   wasm_frame_func_index ::
     Ptr WasmFrame -> IO Word32
@@ -782,22 +778,6 @@ foreign import ccall unsafe "wasm_extern_as_table"
 foreign import ccall unsafe "wasm_extern_as_memory"
   wasm_extern_as_memory ::
     Ptr WasmExtern -> IO (Ptr WasmMemory)
-
-foreign import ccall unsafe "wasm_func_as_extern_const"
-  wasm_func_as_extern_const ::
-    Ptr WasmFunc -> IO (Ptr WasmExtern)
-
-foreign import ccall unsafe "wasm_global_as_extern_const"
-  wasm_global_as_extern_const ::
-    Ptr WasmGlobal -> IO (Ptr WasmExtern)
-
-foreign import ccall unsafe "wasm_table_as_extern_const"
-  wasm_table_as_extern_const ::
-    Ptr WasmTable -> IO (Ptr WasmExtern)
-
-foreign import ccall unsafe "wasm_memory_as_extern_const"
-  wasm_memory_as_extern_const ::
-    Ptr WasmMemory -> IO (Ptr WasmExtern)
 
 foreign import ccall unsafe "wasm_extern_as_func_const"
   wasm_extern_as_func_const ::
