@@ -21,6 +21,8 @@ library
     Wasmtime.Engine
     Wasmtime.Error
     Wasmtime.Frame
+    Wasmtime.Functype
+    Wasmtime.Linker
     Wasmtime.Module
     Wasmtime.Raw
     Wasmtime.Raw.Types
@@ -31,7 +33,10 @@ library
 
   extra-libraries:  wasmtime
   hs-source-dirs:   src
-  build-depends:    vector
+  build-depends:
+    , mtl
+    , vector
+
   default-language: Haskell2010
 
 test-suite wasmtime-hs-test

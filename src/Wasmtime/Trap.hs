@@ -8,10 +8,12 @@ import UnliftIO.Foreign
 import Wasmtime.ByteVec
 import Wasmtime.Frame
 import Wasmtime.Raw
+import Wasmtime.Store
 import Wasmtime.Vec
 
 data Trap = Trap
-  { message :: !ByteString,
+  { wasmTrap :: !(ForeignPtr WasmTrap),
+    message :: !ByteString,
     trace :: !(V.Vector Frame),
     exitStatus :: !(Maybe Int)
   }
@@ -21,6 +23,7 @@ instance Exception Trap
 
 fromWasmTrap :: Ptr WasmTrap -> IO Trap
 fromWasmTrap p_t = do
+  fp_t <- newForeignPtr p_wasm_trap_delete p_t
   _msg <- alloca $ \p_msg -> do
     wasm_trap_message p_t p_msg
     BS.init <$> fromWasmByteVec (castPtr p_msg)
@@ -37,5 +40,13 @@ fromWasmTrap p_t = do
   _s <- alloca $ \p_s -> do
     _f <- toBool <$> wasmtime_trap_exit_status p_t p_s
     if _f then Just . fromIntegral <$> peek p_s else pure Nothing
-  wasm_trap_delete p_t
-  pure $ Trap _msg _t _s
+  pure $ Trap fp_t _msg _t _s
+
+newTrap :: Store -> ByteString -> IO Trap
+newTrap (Store fp_s) bs_msg = withForeignPtr fp_s $ \p_s ->
+  asWasmByteVec (bs_msg `BS.snoc` 0) $
+    \p_msg -> fromWasmTrap =<< wasm_trap_new p_s (castPtr p_msg)
+
+foreign import ccall unsafe "&wasm_trap_delete"
+  p_wasm_trap_delete ::
+    FinalizerPtr WasmTrap

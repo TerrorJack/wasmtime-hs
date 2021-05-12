@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 import qualified Data.ByteString as BS
@@ -7,6 +8,7 @@ import Wasmtime
 import Wasmtime.ByteVec
 import Wasmtime.Config
 import Wasmtime.Engine
+import Wasmtime.Functype
 import Wasmtime.Module
 import Wasmtime.Raw
 import Wasmtime.Store
@@ -15,7 +17,7 @@ import Wasmtime.Trap
 main :: IO ()
 main = do
   e <- newEngine defaultConfig
-  _ <- newStore e
+  s <- newStore e
   performGC
   buf_wat <- BS.readFile "test/hello.wat"
   buf_wasm <- wat2wasm buf_wat
@@ -28,3 +30,5 @@ main = do
       p_t <- wasm_trap_new p_s (castPtr p_msg)
       fromWasmTrap p_t
   print t
+  print =<< newTrap s "yolo"
+  asWasmFunctype (Functype [] []) print
