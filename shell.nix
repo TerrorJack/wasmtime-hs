@@ -9,10 +9,14 @@
 , toolsGhc ? "ghc8104"
 , hsPkgs ? import ./default.nix { inherit pkgs ghc; }
 }:
+let
+  ghc_ver = pkgs.haskell-nix.compiler."${ghc}".version;
+  ghc_pre_9 = !(pkgs.lib.versionAtLeast ghc_ver "9");
+in
 hsPkgs.shellFor {
   packages = ps: with ps; [ wasmtime-hs ];
 
-  withHoogle = true;
+  withHoogle = ghc_pre_9;
 
   nativeBuildInputs = pkgs.lib.attrValues
     (pkgs.haskell-nix.tools toolsGhc {
@@ -20,11 +24,12 @@ hsPkgs.shellFor {
       cabal = "latest";
       cabal-fmt = "latest";
       friendly = "latest";
+      ghcid = "latest";
       hindent = "latest";
       hlint = "latest";
       ormolu = "latest";
       stylish-haskell = "latest";
-    }) ++ [
+    }) ++ pkgs.lib.optionals ghc_pre_9 [
     (pkgs.haskell-nix.cabalProject {
       src = pkgs.fetchFromGitHub {
         owner = "haskell";
@@ -33,9 +38,10 @@ hsPkgs.shellFor {
         sha256 = "07b8xjjsd5g4lh9c1klak7gnlss5zwb6dad2cgdxry9jhx7w4z7m";
         fetchSubmodules = true;
       };
-      compiler-nix-name = ghc;
+      compiler-nix-name = toolsGhc;
       configureArgs = "--disable-benchmarks --disable-tests";
     }).haskell-language-server.components.exes.haskell-language-server
+  ] ++ [
     pkgs.clang-tools
     (import sources.niv { }).niv
     pkgs.nixfmt

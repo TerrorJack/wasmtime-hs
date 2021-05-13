@@ -15,6 +15,7 @@ jobs:
         os:
           - ubuntu-latest
         ghc:
+          - ghc901
           - ghc8104
           - ghc884
           - ghc865
@@ -44,7 +45,7 @@ jobs:
 
       - name: test-nix-shell
         run: |
-          nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "cabal v2-test --test-show-details always && (echo :q | cabal v2-repl) && haskell-language-server typecheck"
+          nix-shell --pure --keep-going --argstr ghc ${{ matrix.ghc }} --run "cabal v2-test --test-show-details always && (echo :q | cabal v2-repl)"
 
   windows-cargo-build:
     name: windows-cargo-build
