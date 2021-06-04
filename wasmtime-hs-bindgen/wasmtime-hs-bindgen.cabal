@@ -1,0 +1,24 @@
+cabal-version: 2.2
+name:          wasmtime-hs-bindgen
+version:       0.0.1.0
+build-type:    Simple
+
+executable wasmtime-hs-bindgen
+  hs-source-dirs:   app
+  main-is:          wasmtime-hs-bindgen.hs
+  ghc-options:      -Wall -threaded -rtsopts
+  build-depends:
+    , base
+    , bytestring
+    , Cabal
+    , containers
+    , filepath
+    , language-c
+    , pretty
+    , process
+    , template-haskell
+    , uniplate
+    , unliftio
+    , unordered-containers
+
+  default-language: Haskell2010

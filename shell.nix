@@ -14,18 +14,17 @@ let
   ghc_pre_9 = !(pkgs.lib.versionAtLeast ghc_ver "9");
 in
 hsPkgs.shellFor {
-  packages = ps: with ps; [ wasmtime-hs ];
+  packages = ps: with ps; [ wasmtime-hs wasmtime-hs-bindgen ];
 
   withHoogle = ghc_pre_9;
 
   nativeBuildInputs = pkgs.lib.attrValues
     (pkgs.haskell-nix.tools toolsGhc {
       brittany = "latest";
-      cabal = "latest";
       cabal-fmt = "latest";
+      floskell = "latest";
       friendly = "latest";
       ghcid = "latest";
-      hindent = "latest";
       hlint = "latest";
       ormolu = "latest";
       stylish-haskell = "latest";
@@ -38,10 +37,11 @@ hsPkgs.shellFor {
         sha256 = "07b8xjjsd5g4lh9c1klak7gnlss5zwb6dad2cgdxry9jhx7w4z7m";
         fetchSubmodules = true;
       };
-      compiler-nix-name = toolsGhc;
-      configureArgs = "--disable-benchmarks --disable-tests";
+      compiler-nix-name = ghc;
+      configureArgs = "--disable-benchmarks --disable-tests -fall-formatters -fall-plugins";
     }).haskell-language-server.components.exes.haskell-language-server
   ] ++ [
+    pkgs.haskell-nix.internal-cabal-install
     pkgs.clang-tools
     (import sources.niv { }).niv
     pkgs.nixfmt
@@ -52,6 +52,8 @@ hsPkgs.shellFor {
   exactDeps = true;
 
   LD_LIBRARY_PATH = [ "${pkgs.wasmtime}/lib" ];
+
+  WASMTIME_SRC = pkgs.wasmtime.src;
 
   RUST_BACKTRACE = "full";
 }

@@ -62,6 +62,9 @@ instance Storable WasmLimits where
   peek p = WasmLimits <$> #{peek wasm_limits_t, min} p <*> #{peek wasm_limits_t, max} p
   poke p WasmLimits {..} = #{poke wasm_limits_t, min} p wasmLimitsMin *> #{poke wasm_limits_t, max} p wasmLimitsMax
 
+wasmLimitsMaxDefault :: Word32
+wasmLimitsMaxDefault = #{const wasm_limits_max_default}
+
 data WasmValtype
 
 data WasmValtypeVec = WasmValtypeVec
@@ -79,7 +82,7 @@ newtype WasmValkind
   = WasmValkind Word8
   deriving (Eq, Storable)
 
-#{enum WasmValkind, WasmValkind, wasmI32 = WASM_I32, wasmI64 = WASM_I64, wasmF32 = WASM_F32, wasmF64 = WASM_F64, wasmAnyref = WASM_ANYREF, wasmFuncref = WASM_FUNCREF}
+#{enum WasmValkind, WasmValkind, wasmI32 = WASM_I32, wasmI64 = WASM_I64, wasmF32 = WASM_F32, wasmF64 = WASM_F64, wasmAnyref = WASM_ANYREF, wasmFuncref = WASM_FUNCREF, wasmV128 = WASMTIME_V128}
 
 data WasmFunctype
 
@@ -150,7 +153,7 @@ newtype WasmExternkind
   = WasmExternkind Word8
   deriving (Storable)
 
-#{enum WasmExternkind, WasmExternkind, wasmExternFunc = WASM_EXTERN_FUNC, wasmExternGlobal = WASM_EXTERN_GLOBAL, wasmExternTable = WASM_EXTERN_TABLE, wasmExternMemory = WASM_EXTERN_MEMORY, wasmExternModule = WASM_EXTERN_MODULE, wasmExternInstance = WASM_EXTERN_INSTANCE}
+#{enum WasmExternkind, WasmExternkind, wasmExternFunc = WASM_EXTERN_FUNC, wasmExternGlobal = WASM_EXTERN_GLOBAL, wasmExternTable = WASM_EXTERN_TABLE, wasmExternMemory = WASM_EXTERN_MEMORY}
 
 data WasmImporttype
 
@@ -179,31 +182,31 @@ instance Storable WasmExporttypeVec where
   poke p WasmExporttypeVec {..} = #{poke wasm_exporttype_vec_t, size} p wasmExporttypeVecSize *> #{poke wasm_exporttype_vec_t, data} p wasmExporttypeVecData
 
 data WasmVal
-  = I32 !Int32
-  | I64 !Int64
-  | F32 !Float32
-  | F64 !Float64
-  | Anyref !(Ptr WasmRef)
-  | Funcref !(Ptr WasmRef)
+  = WasmI32 !Int32
+  | WasmI64 !Int64
+  | WasmF32 !Float32
+  | WasmF64 !Float64
+  | WasmAnyref !(Ptr WasmRef)
+  | WasmFuncref !(Ptr WasmRef)
 
 instance Storable WasmVal where
   sizeOf _ = #{size wasm_val_t}
   alignment _ = #{alignment wasm_val_t}
   peek p = do
     k <- #{peek wasm_val_t, kind} p
-    if | k == wasmI32 -> I32 <$> #{peek wasm_val_t, of} p
-       | k == wasmI64 -> I64 <$> #{peek wasm_val_t, of} p
-       | k == wasmF32 -> F32 <$> #{peek wasm_val_t, of} p
-       | k == wasmF64 -> F64 <$> #{peek wasm_val_t, of} p
-       | k == wasmAnyref -> Anyref <$> #{peek wasm_val_t, of} p
-       | k == wasmFuncref -> Funcref <$> #{peek wasm_val_t, of} p
+    if | k == wasmI32 -> WasmI32 <$> #{peek wasm_val_t, of} p
+       | k == wasmI64 -> WasmI64 <$> #{peek wasm_val_t, of} p
+       | k == wasmF32 -> WasmF32 <$> #{peek wasm_val_t, of} p
+       | k == wasmF64 -> WasmF64 <$> #{peek wasm_val_t, of} p
+       | k == wasmAnyref -> WasmAnyref <$> #{peek wasm_val_t, of} p
+       | k == wasmFuncref -> WasmFuncref <$> #{peek wasm_val_t, of} p
        | otherwise -> fail "unreachable"
-  poke p (I32 v) = #{poke wasm_val_t, kind} p wasmI32 *> #{poke wasm_val_t, of} p v
-  poke p (I64 v) = #{poke wasm_val_t, kind} p wasmI64 *> #{poke wasm_val_t, of} p v
-  poke p (F32 v) = #{poke wasm_val_t, kind} p wasmF32 *> #{poke wasm_val_t, of} p v
-  poke p (F64 v) = #{poke wasm_val_t, kind} p wasmF64 *> #{poke wasm_val_t, of} p v
-  poke p (Anyref v) = #{poke wasm_val_t, kind} p wasmAnyref *> #{poke wasm_val_t, of} p v
-  poke p (Funcref v) = #{poke wasm_val_t, kind} p wasmFuncref *> #{poke wasm_val_t, of} p v
+  poke p (WasmI32 v) = #{poke wasm_val_t, kind} p wasmI32 *> #{poke wasm_val_t, of} p v
+  poke p (WasmI64 v) = #{poke wasm_val_t, kind} p wasmI64 *> #{poke wasm_val_t, of} p v
+  poke p (WasmF32 v) = #{poke wasm_val_t, kind} p wasmF32 *> #{poke wasm_val_t, of} p v
+  poke p (WasmF64 v) = #{poke wasm_val_t, kind} p wasmF64 *> #{poke wasm_val_t, of} p v
+  poke p (WasmAnyref v) = #{poke wasm_val_t, kind} p wasmAnyref *> #{poke wasm_val_t, of} p v
+  poke p (WasmFuncref v) = #{poke wasm_val_t, kind} p wasmFuncref *> #{poke wasm_val_t, of} p v
 
 data WasmValVec = WasmValVec
   { wasmValVecSize :: !CSize,
@@ -286,10 +289,6 @@ data WasmInstance
 
 data WasiConfig
 
-data WasiInstance
-
-data WasmtimeError
-
 newtype WasmtimeStrategy
   = WasmtimeStrategy Word8
   deriving (Storable)
@@ -308,48 +307,151 @@ newtype WasmtimeProfilingStrategy
 
 #{enum WasmtimeProfilingStrategy, WasmtimeProfilingStrategy, wasmtimeProfilingStrategyNone = WASMTIME_PROFILING_STRATEGY_NONE, wasmtimeProfilingStrategyJitdump = WASMTIME_PROFILING_STRATEGY_JITDUMP, wasmtimeProfilingStrategyVtune = WASMTIME_PROFILING_STRATEGY_VTUNE}
 
-data WasmtimeLinker
+data WasmtimeError
+
+data WasmtimeFunc = WasmtimeFunc
+  { wasmtimeFuncStoreId :: !Word64,
+    wasmtimeFuncIndex :: !CSize
+  }
+
+instance Storable WasmtimeFunc where
+  sizeOf _ = #{size wasmtime_func_t}
+  alignment _ = #{alignment wasmtime_func_t}
+  peek p = WasmtimeFunc <$> #{peek wasmtime_func_t, store_id} p <*> #{peek wasmtime_func_t, index} p
+  poke p WasmtimeFunc {..} = #{poke wasmtime_func_t, store_id} p wasmtimeFuncStoreId *> #{poke wasmtime_func_t, index} p wasmtimeFuncIndex
+
+data WasmtimeTable = WasmtimeTable
+  { wasmtimeTableStoreId :: !Word64,
+    wasmtimeTableIndex :: !CSize
+  }
+
+instance Storable WasmtimeTable where
+  sizeOf _ = #{size wasmtime_table_t}
+  alignment _ = #{alignment wasmtime_table_t}
+  peek p = WasmtimeTable <$> #{peek wasmtime_table_t, store_id} p <*> #{peek wasmtime_table_t, index} p
+  poke p WasmtimeTable {..} = #{poke wasmtime_table_t, store_id} p wasmtimeTableStoreId *> #{poke wasmtime_table_t, index} p wasmtimeTableIndex
+
+data WasmtimeMemory = WasmtimeMemory
+  { wasmtimeMemoryStoreId :: !Word64,
+    wasmtimeMemoryIndex :: !CSize
+  }
+
+instance Storable WasmtimeMemory where
+  sizeOf _ = #{size wasmtime_memory_t}
+  alignment _ = #{alignment wasmtime_memory_t}
+  peek p = WasmtimeMemory <$> #{peek wasmtime_memory_t, store_id} p <*> #{peek wasmtime_memory_t, index} p
+  poke p WasmtimeMemory {..} = #{poke wasmtime_memory_t, store_id} p wasmtimeMemoryStoreId *> #{poke wasmtime_memory_t, index} p wasmtimeMemoryIndex
+
+data WasmtimeInstance = WasmtimeInstance
+  { wasmtimeInstanceStoreId :: !Word64,
+    wasmtimeInstanceIndex :: !CSize
+  }
+
+instance Storable WasmtimeInstance where
+  sizeOf _ = #{size wasmtime_instance_t}
+  alignment _ = #{alignment wasmtime_instance_t}
+  peek p = WasmtimeInstance <$> #{peek wasmtime_instance_t, store_id} p <*> #{peek wasmtime_instance_t, index} p
+  poke p WasmtimeInstance {..} = #{poke wasmtime_instance_t, store_id} p wasmtimeInstanceStoreId *> #{poke wasmtime_instance_t, index} p wasmtimeInstanceIndex
+
+data WasmtimeGlobal = WasmtimeGlobal
+  { wasmtimeGlobalStoreId :: !Word64,
+    wasmtimeGlobalIndex :: !CSize
+  }
+
+instance Storable WasmtimeGlobal where
+  sizeOf _ = #{size wasmtime_global_t}
+  alignment _ = #{alignment wasmtime_global_t}
+  peek p = WasmtimeGlobal <$> #{peek wasmtime_global_t, store_id} p <*> #{peek wasmtime_global_t, index} p
+  poke p WasmtimeGlobal {..} = #{poke wasmtime_global_t, store_id} p wasmtimeGlobalStoreId *> #{poke wasmtime_global_t, index} p wasmtimeGlobalIndex
+
+newtype WasmtimeExternKind
+  = WasmtimeExternKind Word8
+  deriving (Eq, Storable)
+
+#{enum WasmtimeExternKind, WasmtimeExternKind, wasmtimeExternFunc = WASMTIME_EXTERN_FUNC, wasmtimeExternGlobal = WASMTIME_EXTERN_GLOBAL, wasmtimeExternTable = WASMTIME_EXTERN_TABLE, wasmtimeExternMemory = WASMTIME_EXTERN_MEMORY, wasmtimeExternInstance = WASMTIME_EXTERN_INSTANCE, wasmtimeExternModule = WASMTIME_EXTERN_MODULE}
+
+data WasmtimeExtern
+  = Func !WasmtimeFunc
+  | Global !WasmtimeGlobal
+  | Table !WasmtimeTable
+  | Memory !WasmtimeMemory
+  | Instance !WasmtimeInstance
+  | Module !(Ptr WasmtimeModule)
+
+instance Storable WasmtimeExtern where
+  sizeOf _ = #{size wasmtime_extern_t}
+  alignment _ = #{alignment wasmtime_extern_t}
+  peek p = do
+    k <- #{peek wasmtime_extern_t, kind} p
+    if | k == wasmtimeExternFunc -> Func <$> #{peek wasmtime_extern_t, of} p
+       | k == wasmtimeExternGlobal -> Global <$> #{peek wasmtime_extern_t, of} p
+       | k == wasmtimeExternTable -> Table <$> #{peek wasmtime_extern_t, of} p
+       | k == wasmtimeExternMemory -> Memory <$> #{peek wasmtime_extern_t, of} p
+       | k == wasmtimeExternInstance -> Instance <$> #{peek wasmtime_extern_t, of} p
+       | k == wasmtimeExternModule -> Module <$> #{peek wasmtime_extern_t, of} p
+       | otherwise -> fail "unreachable"
+  poke p (Func v) = #{poke wasmtime_extern_t, kind} p wasmtimeExternFunc *> #{poke wasmtime_extern_t, of} p v
+  poke p (Global v) = #{poke wasmtime_extern_t, kind} p wasmtimeExternGlobal *> #{poke wasmtime_extern_t, of} p v
+  poke p (Table v) = #{poke wasmtime_extern_t, kind} p wasmtimeExternTable *> #{poke wasmtime_extern_t, of} p v
+  poke p (Memory v) = #{poke wasmtime_extern_t, kind} p wasmtimeExternMemory *> #{poke wasmtime_extern_t, of} p v
+  poke p (Instance v) = #{poke wasmtime_extern_t, kind} p wasmtimeExternInstance *> #{poke wasmtime_extern_t, of} p v
+  poke p (Module v) = #{poke wasmtime_extern_t, kind} p wasmtimeExternModule *> #{poke wasmtime_extern_t, of} p v
 
 data WasmtimeCaller
 
 newtype WasmtimeFuncCallback
   = WasmtimeFuncCallback
-      (FunPtr (Ptr WasmtimeCaller -> Ptr WasmValVec -> Ptr WasmValVec -> IO (Ptr WasmTrap)))
+      (FunPtr (Ptr () -> Ptr WasmtimeCaller -> Ptr WasmtimeVal -> CSize -> Ptr WasmtimeVal -> CSize -> IO (Ptr WasmTrap)))
   deriving (Storable)
 
-newtype WasmtimeFuncCallbackWithEnv
-  = WasmtimeFuncCallbackWithEnv
-      (FunPtr (Ptr WasmtimeCaller -> Ptr () -> Ptr WasmValVec -> Ptr WasmValVec -> IO (Ptr WasmTrap)))
-  deriving (Storable)
+data WasmtimeInstancetype
+
+data WasmtimeLinker
+
+data WasmtimeModuletype
+
+data WasmtimeModule
+
+data WasmtimeStore
+
+data WasmtimeContext
 
 data WasmtimeInterruptHandle
 
-newtype WasmtimeExternrefFinalizer
-  = WasmtimeExternrefFinalizer (FunPtr (Ptr () -> IO ()))
-  deriving (Storable)
+data WasmtimeExternref
 
-data WasmInstancetype
+newtype WasmtimeValkind
+  = WasmtimeValkind Word8
+  deriving (Eq, Storable)
 
-data WasmInstancetypeVec = WasmInstancetypeVec
-  { wasmInstancetypeVecSize :: !CSize,
-    wasmInstancetypeVecData :: !(Ptr (Ptr WasmInstancetype))
-  }
+#{enum WasmtimeValkind, WasmtimeValkind, wasmtimeI32 = WASMTIME_I32, wasmtimeI64 = WASMTIME_I64, wasmtimeF32 = WASMTIME_F32, wasmtimeF64 = WASMTIME_F64, wasmtimeV128 = WASMTIME_V128, wasmtimeFuncref = WASMTIME_FUNCREF, wasmtimeExternref = WASMTIME_EXTERNREF}
 
-instance Storable WasmInstancetypeVec where
-  sizeOf _ = #{size wasm_instancetype_vec_t}
-  alignment _ = #{alignment wasm_instancetype_vec_t}
-  peek p = WasmInstancetypeVec <$> #{peek wasm_instancetype_vec_t, size} p <*> #{peek wasm_instancetype_vec_t, data} p
-  poke p WasmInstancetypeVec {..} = #{poke wasm_instancetype_vec_t, size} p wasmInstancetypeVecSize *> #{poke wasm_instancetype_vec_t, data} p wasmInstancetypeVecData
+data WasmtimeVal
+  = I32 !Int32
+  | I64 !Int64
+  | F32 !Float32
+  | F64 !Float64
+  | Funcref !WasmtimeFunc
+  | Externref !(Ptr WasmtimeExternref)
+  | V128 !Word64 !Word64
 
-data WasmModuletype
-
-data WasmModuletypeVec = WasmModuletypeVec
-  { wasmModuletypeVecSize :: !CSize,
-    wasmModuletypeVecData :: !(Ptr (Ptr WasmModuletype))
-  }
-
-instance Storable WasmModuletypeVec where
-  sizeOf _ = #{size wasm_moduletype_vec_t}
-  alignment _ = #{alignment wasm_moduletype_vec_t}
-  peek p = WasmModuletypeVec <$> #{peek wasm_moduletype_vec_t, size} p <*> #{peek wasm_moduletype_vec_t, data} p
-  poke p WasmModuletypeVec {..} = #{poke wasm_moduletype_vec_t, size} p wasmModuletypeVecSize *> #{poke wasm_moduletype_vec_t, data} p wasmModuletypeVecData
+instance Storable WasmtimeVal where
+  sizeOf _ = #{size wasmtime_val_t}
+  alignment _ = #{alignment wasmtime_val_t}
+  peek p = do
+    k <- #{peek wasmtime_val_t, kind} p
+    if | k == wasmtimeI32 -> I32 <$> #{peek wasmtime_val_t, of} p
+       | k == wasmtimeI64 -> I64 <$> #{peek wasmtime_val_t, of} p
+       | k == wasmtimeF32 -> F32 <$> #{peek wasmtime_val_t, of} p
+       | k == wasmtimeF64 -> F64 <$> #{peek wasmtime_val_t, of} p
+       | k == wasmtimeFuncref -> Funcref <$> #{peek wasmtime_val_t, of} p
+       | k == wasmtimeExternref -> Externref <$> #{peek wasmtime_val_t, of} p
+       | k == wasmtimeV128 -> V128 <$> #{peek wasmtime_val_t, of} p <*> #{peek wasmtime_val_t, of} (p `plusPtr` 8)
+       | otherwise -> fail "unreachable"
+  poke p (I32 v) = #{poke wasmtime_val_t, kind} p wasmtimeI32 *> #{poke wasmtime_val_t, of} p v
+  poke p (I64 v) = #{poke wasmtime_val_t, kind} p wasmtimeI64 *> #{poke wasmtime_val_t, of} p v
+  poke p (F32 v) = #{poke wasmtime_val_t, kind} p wasmtimeF32 *> #{poke wasmtime_val_t, of} p v
+  poke p (F64 v) = #{poke wasmtime_val_t, kind} p wasmtimeF64 *> #{poke wasmtime_val_t, of} p v
+  poke p (Funcref v) = #{poke wasmtime_val_t, kind} p wasmtimeFuncref *> #{poke wasmtime_val_t, of} p v
+  poke p (Externref v) = #{poke wasmtime_val_t, kind} p wasmtimeExternref *> #{poke wasmtime_val_t, of} p v
+  poke p (V128 l h) = #{poke wasmtime_val_t, kind} p wasmtimeV128 *> #{poke wasmtime_val_t, of} p l *> #{poke wasmtime_val_t, of} (p `plusPtr` 8) h

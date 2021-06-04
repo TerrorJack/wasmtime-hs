@@ -11,6 +11,7 @@ data Valtype
   | F64
   | Anyref
   | Funcref
+  | V128
 
 toWasmValtype :: Valtype -> Ptr Raw.WasmValtype
 toWasmValtype I32 = pI32
@@ -19,6 +20,7 @@ toWasmValtype F32 = pF32
 toWasmValtype F64 = pF64
 toWasmValtype Anyref = pAnyref
 toWasmValtype Funcref = pFuncref
+toWasmValtype V128 = pV128
 
 {-# NOINLINE pI32 #-}
 pI32 :: Ptr Raw.WasmValtype
@@ -43,3 +45,7 @@ pAnyref = unsafePerformIO $ Raw.wasm_valtype_new Raw.wasmAnyref
 {-# NOINLINE pFuncref #-}
 pFuncref :: Ptr Raw.WasmValtype
 pFuncref = unsafePerformIO $ Raw.wasm_valtype_new Raw.wasmFuncref
+
+{-# NOINLINE pV128 #-}
+pV128 :: Ptr Raw.WasmValtype
+pV128 = unsafePerformIO $ Raw.wasm_valtype_new Raw.wasmV128

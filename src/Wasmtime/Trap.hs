@@ -6,9 +6,9 @@ import qualified Data.Vector as V
 import UnliftIO
 import UnliftIO.Foreign
 import Wasmtime.ByteVec
+import Wasmtime.Error
 import Wasmtime.Frame
 import Wasmtime.Raw
-import Wasmtime.Store
 import Wasmtime.Vec
 
 data Trap = Trap
@@ -23,6 +23,7 @@ instance Exception Trap
 
 fromWasmTrap :: Ptr WasmTrap -> IO Trap
 fromWasmTrap p_t = do
+  checkNull p_t
   fp_t <- newForeignPtr p_wasm_trap_delete p_t
   _msg <- alloca $ \p_msg -> do
     wasm_trap_message p_t p_msg
@@ -42,10 +43,9 @@ fromWasmTrap p_t = do
     if _f then Just . fromIntegral <$> peek p_s else pure Nothing
   pure $ Trap fp_t _msg _t _s
 
-newTrap :: Store -> ByteString -> IO Trap
-newTrap (Store fp_s) bs_msg = withForeignPtr fp_s $ \p_s ->
-  asWasmByteVec (bs_msg `BS.snoc` 0) $
-    \p_msg -> fromWasmTrap =<< wasm_trap_new p_s (castPtr p_msg)
+newTrap :: ByteString -> IO Trap
+newTrap bs_msg = asWasmByteVec bs_msg $
+  \p_msg msg_len -> fromWasmTrap =<< wasmtime_trap_new p_msg msg_len
 
 foreign import ccall unsafe "&wasm_trap_delete"
   p_wasm_trap_delete ::

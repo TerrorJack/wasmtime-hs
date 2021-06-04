@@ -5,8 +5,7 @@ import Wasmtime.Config
 import Wasmtime.Error
 import Wasmtime.Raw
 
-newtype Engine
-  = Engine (ForeignPtr WasmEngine)
+newtype Engine = Engine (ForeignPtr WasmEngine)
 
 newEngine :: Config -> IO Engine
 newEngine c = do

@@ -12,8 +12,7 @@ import UnliftIO.Foreign
 import Wasmtime.ByteVec
 import qualified Wasmtime.Raw as Raw
 
-newtype Error
-  = Error ByteString
+newtype Error = Error ByteString
   deriving (Show)
 
 instance Exception Error

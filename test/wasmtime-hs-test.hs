@@ -1,34 +1,37 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 
+import Control.DeepSeq
 import qualified Data.ByteString as BS
 import System.Mem
-import UnliftIO.Foreign
+import UnliftIO
 import Wasmtime
 import Wasmtime.ByteVec
 import Wasmtime.Config
+import Wasmtime.Context
 import Wasmtime.Engine
 import Wasmtime.Functype
+import Wasmtime.Memory
 import Wasmtime.Module
-import Wasmtime.Raw
-import Wasmtime.Store
+import qualified Wasmtime.Raw as Raw
 import Wasmtime.Trap
 
 main :: IO ()
 main = do
   e <- newEngine defaultConfig
-  s <- newStore e
+  c <- newContext e
   performGC
   buf_wat <- BS.readFile "test/hello.wat"
   buf_wasm <- wat2wasm buf_wat
   _ <- newModule e buf_wasm
   print buf_wasm
-  t <- do
-    p_e <- wasm_engine_new
-    p_s <- wasm_store_new p_e
-    asWasmByteVec "asdf\0" $ \p_msg -> do
-      p_t <- wasm_trap_new p_s (castPtr p_msg)
-      fromWasmTrap p_t
+  t <- asWasmByteVec "asdf" $ \p_msg msg_len -> do
+    p_t <- Raw.wasmtime_trap_new p_msg msg_len
+    fromWasmTrap p_t
   print t
-  print =<< newTrap s "yolo"
+  print =<< newTrap "yolo"
   asWasmFunctype (Functype [] []) print
+  m <- newMemory c $ Raw.WasmLimits 1 Raw.wasmLimitsMaxDefault
+  bs_m <- fromMemory c m
+  performGC
+  evaluate $ rnf $ show bs_m

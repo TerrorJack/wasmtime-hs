@@ -18,15 +18,16 @@ library
     Wasmtime
     Wasmtime.ByteVec
     Wasmtime.Config
+    Wasmtime.Context
     Wasmtime.Engine
     Wasmtime.Error
     Wasmtime.Frame
     Wasmtime.Functype
     Wasmtime.Linker
+    Wasmtime.Memory
     Wasmtime.Module
     Wasmtime.Raw
     Wasmtime.Raw.Types
-    Wasmtime.Store
     Wasmtime.Trap
     Wasmtime.Valtype
     Wasmtime.Vec
@@ -47,5 +48,8 @@ test-suite wasmtime-hs-test
   other-modules:    Paths_wasmtime_hs
   main-is:          wasmtime-hs-test.hs
   ghc-options:      -threaded -rtsopts
-  build-depends:    wasmtime-hs
+  build-depends:
+    , deepseq
+    , wasmtime-hs
+
   default-language: Haskell2010
