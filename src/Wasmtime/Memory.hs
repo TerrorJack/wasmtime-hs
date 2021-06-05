@@ -10,9 +10,13 @@ import Wasmtime.Internal
 import qualified Wasmtime.Raw as Raw
 
 newMemory :: Context -> Raw.WasmLimits -> IO Raw.WasmtimeMemory
-newMemory (Context fp_c) l = withForeignPtr fp_c $ \p_c -> alloca $ \p_m -> do
+newMemory (Context fp_c) l = alloca $ \p_m -> do
   checkError
-    =<< withWasmMemorytype l (\p_mt -> Raw.wasmtime_memory_new p_c p_mt p_m)
+    =<< withForeignPtr
+      fp_c
+      ( \p_c ->
+          withWasmMemorytype l (\p_mt -> Raw.wasmtime_memory_new p_c p_mt p_m)
+      )
   peek p_m
 
 fromMemory :: Context -> Raw.WasmtimeMemory -> IO ByteString

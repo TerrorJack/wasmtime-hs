@@ -28,6 +28,7 @@ library
     Wasmtime.Module
     Wasmtime.Raw
     Wasmtime.Raw.Types
+    Wasmtime.Table
     Wasmtime.Trap
     Wasmtime.Valtype
     Wasmtime.Vec
