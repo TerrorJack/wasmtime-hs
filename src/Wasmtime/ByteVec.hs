@@ -5,6 +5,7 @@ import qualified Data.ByteString.Internal as BS
 import qualified Data.ByteString.Unsafe as BS
 import UnliftIO
 import UnliftIO.Foreign
+import Wasmtime.Internal
 import qualified Wasmtime.Raw as Raw
 
 asWasmByteVec :: ByteString -> (Ptr a -> CSize -> IO r) -> IO r
@@ -23,7 +24,4 @@ fromOwnedWasmByteVec :: ForeignPtr a -> Ptr Raw.WasmByteVec -> IO ByteString
 fromOwnedWasmByteVec fp p_bv = do
   Raw.WasmByteVec buf_len buf_p <- peek p_bv
   evaluate $
-    BS.fromForeignPtr
-      (castForeignPtr fp)
-      (buf_p `minusPtr` unsafeForeignPtrToPtr fp)
-      (fromIntegral buf_len)
+    BS.fromForeignPtr (fp `setPtr` castPtr buf_p) 0 (fromIntegral buf_len)
