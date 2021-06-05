@@ -3,6 +3,7 @@
 
 import Control.DeepSeq
 import qualified Data.ByteString as BS
+import qualified Data.ByteString.Unsafe as BS
 import System.Mem
 import UnliftIO
 import Wasmtime
@@ -33,5 +34,9 @@ main = do
   asWasmFunctype (Functype [] []) print
   m <- newMemory c $ Raw.WasmLimits 1 Raw.wasmLimitsMaxDefault
   bs_m <- fromMemory c m
+  BS.unsafeUseAsCStringLen bs_m print
+  growMemory c m 16
+  bs_m' <- fromMemory c m
+  BS.unsafeUseAsCStringLen bs_m' print
   performGC
-  evaluate $ rnf $ show bs_m
+  evaluate $ rnf $ show bs_m'

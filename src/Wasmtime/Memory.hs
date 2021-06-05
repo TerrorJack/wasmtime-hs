@@ -24,6 +24,17 @@ fromMemory (Context fp_c@(ForeignPtr _ c)) m = withForeignPtr fp_c $ \p_c ->
     evaluate $
       BS.fromForeignPtr (ForeignPtr buf_addr c) 0 (fromIntegral buf_len)
 
+growMemory :: Context -> Raw.WasmtimeMemory -> Int -> IO ()
+growMemory (Context fp_c) m delta =
+  checkError
+    =<< withForeignPtr
+      fp_c
+      ( \p_c ->
+          with
+            m
+            (\p_m -> alloca (Raw.wasmtime_memory_grow p_c p_m (fromIntegral delta)))
+      )
+
 withWasmMemorytype ::
   Raw.WasmLimits -> (Ptr Raw.WasmMemorytype -> IO r) -> IO r
 withWasmMemorytype l =
