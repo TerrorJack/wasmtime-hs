@@ -41,11 +41,13 @@ main = do
   growMemory c m 16
   bs_m' <- fromMemory c m
   BS.unsafeUseAsCStringLen bs_m' print
-  _ <-
+  tbl <-
     newTable
       c
       Anyref
       (Raw.WasmLimits 1 Raw.wasmLimitsMaxDefault)
       (Raw.Externref nullPtr)
+  setTable c tbl 0 (Raw.Externref nullPtr)
+  _ <- getTable c tbl 0
   performGC
   evaluate $ rnf $ show bs_m'
