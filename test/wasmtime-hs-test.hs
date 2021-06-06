@@ -47,7 +47,8 @@ main = do
       Anyref
       (Raw.WasmLimits 1 Raw.wasmLimitsMaxDefault)
       (Raw.Externref nullPtr)
-  setTable c tbl 0 (Raw.Externref nullPtr)
-  _ <- getTable c tbl 0
+  growTable c tbl 1 (Raw.Externref nullPtr)
+  setTable c tbl 1 (Raw.Externref nullPtr)
+  _ <- getTable c tbl 1
   performGC
   evaluate $ rnf $ show bs_m'

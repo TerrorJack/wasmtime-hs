@@ -49,6 +49,17 @@ setTable (Context fp_c) t i v =
           with t (\p_t -> with v (Raw.wasmtime_table_set p_c p_t (fromIntegral i)))
       )
 
+growTable :: Context -> Raw.WasmtimeTable -> Int -> Raw.WasmtimeVal -> IO ()
+growTable (Context fp_c) t i v =
+  checkError
+    =<< withForeignPtr
+      fp_c
+      ( \p_c ->
+          with
+            t
+            (\p_t -> with v (alloca . Raw.wasmtime_table_grow p_c p_t (fromIntegral i)))
+      )
+
 withWasmTabletype ::
   Valtype -> Raw.WasmLimits -> (Ptr Raw.WasmTabletype -> IO r) -> IO r
 withWasmTabletype vt l =
