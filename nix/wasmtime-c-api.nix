@@ -7,12 +7,12 @@ self: _: {
         src = fetchFromGitHub {
           owner = "bytecodealliance";
           repo = "wasmtime";
-          rev = "1770880e19a771d23715e2d1718cc8d08dbcff80";
-          sha256 = "sha256-zqdql3OZmyLTU7GFUMa/8+MOTQtw8MWpO2owJtwAaPA=";
+          rev = "3d56728b8698d538a00d9f1c295149bbf5e8b78b";
+          sha256 = "sha256-+Nn91yd074SE4PVggTHRmjpcy+i9BjGhUdGO8WvWoi4=";
           fetchSubmodules = true;
         };
         cargoHash =
-          "sha512-Cr+PX6lPmwO1uGrhfhaO8OhmrhX5dFX2QneVZ/gIP6hL9ptyOaEC0QvLer1JnwrNB4SRkuLl7DS5XWiwg8oGQw==";
+          "sha512-13sSiIiL8UFO6rbh0xfrrAmU1KjgEgWfFuljxldhEH1Mg0VLOfRijhvI4Yl9CFUEcZhs4RRyVTf8ibWlp3/i3g==";
         buildInputs = lib.optionals stdenv.isDarwin
           (with darwin; [ libiconv apple_sdk.frameworks.Security ]);
         buildType = "debug";

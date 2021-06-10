@@ -5,7 +5,7 @@
       overlays = haskellNix.nixpkgsArgs.overlays
         ++ [ (import ./nix/wasmtime-c-api.nix) ];
     })
-, ghc ? "ghc8104"
+, ghc ? "ghc8105"
 }:
 pkgs.haskell-nix.cabalProject {
   src = pkgs.haskell-nix.haskellLib.cleanGit {

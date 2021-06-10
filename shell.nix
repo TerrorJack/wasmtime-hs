@@ -5,8 +5,8 @@
       overlays = haskellNix.nixpkgsArgs.overlays
         ++ [ (import ./nix/wasmtime-c-api.nix) ];
     })
-, ghc ? "ghc8104"
-, toolsGhc ? "ghc8104"
+, ghc ? "ghc8105"
+, toolsGhc ? "ghc8105"
 , hsPkgs ? import ./default.nix { inherit pkgs ghc; }
 }:
 let
