@@ -13,4 +13,5 @@ pkgs.haskell-nix.cabalProject {
     src = ./.;
   };
   compiler-nix-name = ghc;
+  modules = [{ dontPatchELF = false; } { dontStrip = false; }];
 }
