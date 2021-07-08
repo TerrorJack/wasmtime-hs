@@ -44,8 +44,8 @@ hsPkgs.shellFor {
         src = pkgs.fetchFromGitHub {
           owner = "phadej";
           repo = "cabal-extras";
-          rev = "43fe572c3b6fe378be965a37a4a0e1c576296eed";
-          sha256 = "sha256-HlfeS+OocwnEDLhue4qnHDhW0ZVRf4PVvc4V1546nAs=";
+          rev = "0431c270a7c5433d05d73042a689718bc9dc9c1a";
+          sha256 = "sha256-xyCzfnJYZ2zi4TN/L/koz7FhYTuJ6ggVEshBcdkyV5w=";
         };
         patches = [ ./nix/cabal-extras.patch ];
       };
@@ -58,17 +58,20 @@ hsPkgs.shellFor {
       ];
     }).cabal-docspec.components.exes.cabal-docspec
   ] ++ pkgs.lib.optionals ghc_pre_9 [
-    (pkgs.haskell-nix.cabalProject {
+    (pkgs.haskell-nix.cabalProject rec {
       src = pkgs.fetchFromGitHub {
         owner = "haskell";
         repo = "haskell-language-server";
-        rev = "1.2.0";
-        sha256 = "sha256-vNpb/Fjb9sKkt/1r29c82P/NeAXpxQbVKnM/EDWY6z4=";
+        rev = "ghcide-v1.4.0.2";
+        sha256 = "sha256-mzIPZS0Ov+xUhb9i1GeACJm7gUZC9D/avle4pJreLdo=";
         fetchSubmodules = true;
       };
       compiler-nix-name = ghc;
-      configureArgs =
-        "--disable-benchmarks --disable-tests -fall-formatters -fall-plugins";
+      cabalProject = builtins.readFile (if ghc_pre_9 then
+        "${src}/cabal.project"
+      else
+        "${src}/cabal-ghc901.project");
+      configureArgs = "--disable-benchmarks --disable-tests";
       modules = [{ dontPatchELF = false; } { dontStrip = false; }];
     }).haskell-language-server.components.exes.haskell-language-server
   ] ++ [

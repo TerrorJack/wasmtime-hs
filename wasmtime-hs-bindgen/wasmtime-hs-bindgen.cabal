@@ -13,11 +13,10 @@ executable wasmtime-hs-bindgen
     , Cabal
     , containers
     , filepath
-    , language-c
+    , language-c >= 0.9
     , pretty
     , process
     , template-haskell
-    , uniplate
     , unliftio
     , unordered-containers
 
