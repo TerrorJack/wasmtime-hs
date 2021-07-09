@@ -7,8 +7,8 @@ self: _: {
         src = fetchFromGitHub {
           owner = "bytecodealliance";
           repo = "wasmtime";
-          rev = "040d48128c415f30f9ce356637896a1ffbb7f915";
-          sha256 = "sha256-mUf5zWaXtjemRsU5TfuOLT0daQ7dk5qTYYHRhkWX164=";
+          rev = "16379db174393bcbc13dc4d17978fe4f1f5ae7a9";
+          sha256 = "sha256-ay/o1dZR0K9UaEubyxzagZS6mgwOVedZIJzPxCukEfg=";
           fetchSubmodules = true;
         };
         cargoHash =

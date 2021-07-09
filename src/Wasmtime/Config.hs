@@ -32,6 +32,7 @@ data Config = Config
     wasmSIMD :: !Bool,
     wasmBulkMemory :: !Bool,
     wasmMultiValue :: !Bool,
+    wasmMultiMemory :: !Bool,
     wasmModuleLinking :: !Bool,
     strategy :: !Strategy,
     craneliftDebugVerifier :: !Bool,
@@ -55,6 +56,7 @@ defaultConfig =
       wasmSIMD = False,
       wasmBulkMemory = True,
       wasmMultiValue = True,
+      wasmMultiMemory = False,
       wasmModuleLinking = False,
       strategy = Auto,
       craneliftDebugVerifier = False,
@@ -79,6 +81,7 @@ toWasmConfig Config {..} = do
   wasmtime_config_wasm_simd_set p $ fromBool wasmSIMD
   wasmtime_config_wasm_bulk_memory_set p $ fromBool wasmBulkMemory
   wasmtime_config_wasm_multi_value_set p $ fromBool wasmMultiValue
+  wasmtime_config_wasm_multi_memory_set p $ fromBool wasmMultiMemory
   wasmtime_config_wasm_module_linking_set p $ fromBool wasmModuleLinking
   checkError
     =<< wasmtime_config_strategy_set

@@ -1233,6 +1233,10 @@ foreign import ccall unsafe "wasmtime_config_wasm_multi_value_set"
   wasmtime_config_wasm_multi_value_set ::
     Ptr WasmConfig -> CBool -> IO ()
 
+foreign import ccall unsafe "wasmtime_config_wasm_multi_memory_set"
+  wasmtime_config_wasm_multi_memory_set ::
+    Ptr WasmConfig -> CBool -> IO ()
+
 foreign import ccall unsafe "wasmtime_config_wasm_module_linking_set"
   wasmtime_config_wasm_module_linking_set ::
     Ptr WasmConfig -> CBool -> IO ()

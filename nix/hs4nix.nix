@@ -10,6 +10,6 @@ mkShell {
       (ps: with ps; [ unliftio unordered-containers vector ]))
   ];
   buildInputs = [ wasmtime ];
-  LD_LIBRARY_PATH = [ "${pkgs.wasmtime}/lib" ];
+  LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.wasmtime ];
   WASMTIME_SRC = pkgs.wasmtime.src;
 }
